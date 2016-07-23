@@ -1,0 +1,7 @@
+
+# BEGIN WordPress
+AuthName "Page d'administration protégée"
+AuthType Basic
+AuthUserFile "/home/loicpasczq/www/.htpasswd"
+Require valid-user
+# END WordPress

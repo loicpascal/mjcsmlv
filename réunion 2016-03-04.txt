@@ -1,0 +1,5 @@
+- afficher les titres puis le contenu en déroulant
+- ajouter bandeau "dernier flash info" sur la page d'accueil
+- page "devenir partenaire" qui pointe vers un bulletin d'inscription
+- ajouter menu "Nos partenaires"
+

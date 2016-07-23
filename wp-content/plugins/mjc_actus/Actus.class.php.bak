@@ -1,0 +1,309 @@
+class Activites
+{
+    public $list_table;
+
+    public function __construct()
+    {
+        // add_action( 'widgets_init' , function() {register_widget( 'NewsletterWidget' );});
+
+        add_action('wp_loaded', array($this, 'save_activity'));
+        add_action('admin_menu', array($this, 'add_admin_menu'));
+        add_action('admin_menu', array($this, 'add_admin_sub_menu'));
+        add_action('admin_init', array($this, 'register_settings'));
+    }
+
+    /**
+     * Créé la table 'mjc_activites'
+     * Elle est appelée lors de l'activation de l'extension avec la méthode register_activation_hook()
+     * @return [type] [description]
+     */
+    public static function install()
+    {
+    	global $wpdb;
+
+    	$wpdb->query("CREATE TABLE IF NOT EXISTS mjc_activites (
+            id int(11) NOT NULL AUTO_INCREMENT,
+            nom varchar(60) NOT NULL,
+            nb_places int(11) NOT NULL,
+            tranche_age varchar(60) NOT NULL,
+            age varchar(60) NOT NULL,
+            age_min int(11) NOT NULL,
+            age_max int(11) NOT NULL,
+            domaine varchar(60) NOT NULL,
+            tarif varchar(60) NOT NULL,
+            t1 int(11) NOT NULL,
+            t2 int(11) NOT NULL,
+            t3 int(11) NOT NULL,
+            t4 int(11) NOT NULL,
+            jour_heure varchar(60) NOT NULL,
+            lieu varchar(60) NOT NULL,
+            intervenant varchar(60) NOT NULL,
+            photo varchar(60) NOT NULL,
+            descriptif text NOT NULL,
+            lien text NOT NULL,
+            PRIMARY KEY (id)
+        );");
+    }
+
+    /**
+     * Supprime la table 'mjc_activites'
+     * Elle est appelée lors de la désinstallation de l'extension
+     * @return [type] [description]
+     */
+    public static function uninstall()
+    {
+        global $wpdb;
+
+        $wpdb->query("DROP TABLE IF EXISTS mjc_activites;");
+    }
+
+    public function add_admin_menu()
+    {
+        // add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
+        $hook = add_menu_page('Activités', 'Activités', 'manage_options', 'mjc_activites', array($this, 'mjc_activites_liste_html'));
+        add_action('load-'.$hook, array($this, 'process_action'));
+    }
+
+    public function add_admin_sub_menu()
+    {
+        // add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
+        add_submenu_page('mjc_activites', 'Ajouter', 'Ajouter', 'manage_options', 'mjc_activites_ajouter', array($this, 'mjc_activites_ajouter_html'));
+        add_submenu_page('mjc_activites', 'Modifier', 'Modifier', 'manage_options', 'mjc_activites_modifier', array($this, 'mjc_activites_modifier_html'));
+    }
+
+    public function mjc_activites_ajouter_html()
+    {
+        echo '<h1>'.get_admin_page_title().'</h1>';
+        echo '<hr/>';
+        ?>
+        <form method="post" action="">
+            <?php settings_fields('mjc_activites_settings') ?>
+            <?php do_settings_sections('mjc_activites_settings') ?>
+            <?php submit_button(); ?>
+        </form>
+        <?php
+    }
+
+    public function mjc_activites_modifier_html()
+    {
+        echo '<h1>'.get_admin_page_title().'</h1>';
+        echo '<hr/>';
+        ?>
+        <form method="post" action="">
+            <?php settings_fields('mjc_activites_settings') ?>
+            <?php do_settings_sections('mjc_activites_settings') ?>
+            <?php submit_button(); ?>
+        </form>
+        <?php
+    }
+
+    public function mjc_activites_liste_html()
+    {
+        echo '<h1>'.get_admin_page_title().'</h1>';
+        echo '<p>Toutes les activités</p>';
+        echo '<hr/>';
+    }
+
+    public function register_settings()
+    {
+        register_setting('mjc_activites_settings', 'mjc_activites_sender');
+        add_settings_section('mjc_activites_section', 'Ajouter une activité', array($this, 'section_html'), 'mjc_activites_settings');
+        add_settings_field('mjc_activites_nom', 'Nom', array($this, 'nom_html'), 'mjc_activites_settings', 'mjc_activites_section');
+        add_settings_field('mjc_activites_nb_places', 'Nombre de places', array($this, 'nb_places_html'), 'mjc_activites_settings', 'mjc_activites_section');
+        add_settings_field('mjc_activites_tranche_age', 'Tranche d\'âge', array($this, 'tranche_age_html'), 'mjc_activites_settings', 'mjc_activites_section');
+        add_settings_field('mjc_activites_intervenant', 'Intervenant', array($this, 'intervenant_html'), 'mjc_activites_settings', 'mjc_activites_section');
+        add_settings_field('mjc_activites_domaine', 'Domaine', array($this, 'domaine_html'), 'mjc_activites_settings', 'mjc_activites_section');
+    }
+
+    public function section_html() {
+        echo 'Renseignez les paramètres d\'envoi de la newsletter.';
+    }
+
+    public function nom_html() {
+        ?>
+        <input type="text" name="mjc_activites_nom" value="<?php echo get_option('mjc_activites_nom')?>"/>
+        <?php
+    }
+
+    public function nb_places_html() {
+        ?>
+        <input type="text" name="mjc_activites_nb_places" value="<?php echo get_option('mjc_activites_nb_places')?>"/>
+        <?php
+    }
+
+    public function tranche_age_html() {
+        ?>
+        <input type="text" name="mjc_activites_tranche_age" value="<?php echo get_option('mjc_activites_tranche_age')?>"/>
+        <?php
+    }
+
+    public function intervenant_html()
+    {
+        $intervenants = $this->getAllFrom('intervenants');
+        ?>
+        <select name="mjc_activites_intervenant">
+            <?php
+            foreach ( $intervenants as $intervenant ) 
+            {
+                echo '<option value="' . $intervenant->id . '">' . $intervenant->prenom . " " . $intervenant->nom . '</option>';
+            }
+            ?>
+        </select>
+        <?php
+    }
+
+    public function domaine_html()
+    {
+        $domaines = $this->getAllFrom('domaines');
+        ?>
+        <select name="mjc_activites_domaine">
+            <?php
+            foreach ( $domaines as $domaine )
+            {
+                echo '<option value="' . $domaine->id . '">' . $domaine->nom . '</option>';
+            }
+            ?>
+        </select>
+        <?php
+    }
+
+    /**
+     * Enregistre le mail du visiteur dans la table 'mjc_newsletter'
+     * @return [type] [description]
+     */
+    public function save_activity()
+    {
+        if (isset($_POST['mjc_activites_nom']) && !empty($_POST['mjc_activites_nom'])) {
+            global $wpdb;
+
+            $nom = $_POST['mjc_activites_nom'];
+            $nb_places = $_POST['mjc_activites_nb_places'];
+            $tranche_age = $_POST['mjc_activites_tranche_age'];
+            $intervenant = $_POST['mjc_activites_intervenant'];
+            $domaine = $_POST['mjc_activites_domaine'];
+            // $date = date("Y-m-d H:i:s");
+
+            $row = $wpdb->get_row("SELECT * FROM mjc_activites WHERE nom = '$nom' AND domaine = '$domaine'");
+            if (is_null($row)) {
+                $wpdb->insert("mjc_activites", array(
+                    'nom' => $nom,
+                    'nb_places' => $nb_places,
+                    'tranche_age' => $tranche_age,
+                    'intervenant' => $intervenant,
+                    'domaine' => $domaine,
+                ));
+            }
+        }
+    }
+
+    /**
+     * On vérifie si le formulaire a été envoyé
+     * @return [type] [description]
+     */
+    public function process_action()
+    {
+        if (isset($_POST['save_activity'])) {
+            $this->save_activity();
+        }
+    }
+
+    public function getAllFrom($table) {
+        global $wpdb;
+        return $wpdb->get_results( "SELECT * FROM mjc_activites_$table" );
+    }
+}
+
+
+class SP_Plugin {
+
+    // class instance
+    static $instance;
+
+    // customer WP_List_Table object
+    public $customers_obj;
+
+    // class constructor
+    public function __construct() {
+        add_filter( 'set-screen-option', [ __CLASS__, 'set_screen' ], 10, 3 );
+        add_action( 'admin_menu', [ $this, 'plugin_menu' ] );
+    }
+
+
+    public static function set_screen( $status, $option, $value ) {
+        return $value;
+    }
+
+    public function plugin_menu() {
+
+        $hook = add_menu_page(
+            'Sitepoint WP_List_Table Example',
+            'SP WP_List_Table',
+            'manage_options',
+            'wp_list_table_class',
+            [ $this, 'plugin_settings_page' ]
+        );
+
+        add_action( "load-$hook", [ $this, 'screen_option' ] );
+    }
+
+
+    /**
+     * Plugin settings page
+     */
+    public function plugin_settings_page() {
+        ?>
+        <div class="wrap">
+            <h2>WP_List_Table Class Example</h2>
+
+            <div id="poststuff">
+                <div id="post-body" class="metabox-holder columns-2">
+                    <div id="post-body-content">
+                        <div class="meta-box-sortables ui-sortable">
+                            <form method="post">
+                                <?php
+                                    $this->customers_obj->prepare_items();
+                                    $this->customers_obj->display();
+                                ?>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <br class="clear">
+            </div>
+        </div>
+    <?php
+    }
+
+    /**
+     * Screen options
+     */
+    public function screen_option() {
+
+        $option = 'per_page';
+        $args   = [
+            'label'   => 'Customers',
+            'default' => 5,
+            'option'  => 'customers_per_page'
+        ];
+
+        add_screen_option( $option, $args );
+
+        $this->customers_obj = new Activites();
+    }
+
+
+    /** Singleton instance */
+    public static function get_instance() {
+        if ( ! isset( self::$instance ) ) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
+    }
+
+}
+
+
+add_action( 'plugins_loaded', function () {
+    SP_Plugin::get_instance();
+} );

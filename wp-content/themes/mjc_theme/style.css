@@ -1,0 +1,813 @@
+/*
+Theme Name: MJC
+Theme URI: https://wordpress.org/themes/twentythirteen/
+Author: the WordPress team
+Author URI: https://wordpress.org/
+Description: The 2013 theme for WordPress takes us back to the blog, featuring a full range of post formats, each displayed beautifully in their own unique way. Design details abound, starting with a vibrant color scheme and matching header images, beautiful typography and icons, and a flexible layout that looks great on any device, big or small.
+Version: 1.7
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: black, brown, orange, tan, white, yellow, light, one-column, two-columns, right-sidebar, fluid-layout, responsive-layout, custom-header, custom-menu, editor-style, featured-images, microformats, post-formats, rtl-language-support, sticky-post, translation-ready, accessibility-ready
+Text Domain: twentythirteen
+
+This theme, like WordPress, is licensed under the GPL.
+Use it to make something cool, have fun, and share what you've learned with others.
+*/
+
+@import url("style_parent.css");
+/*@import url("css/fontawesome/font-awesome.min.css");*/
+
+/**
+ * Table of Contents:
+ *
+ * 1.0 - Reset
+ * 2.0 - Repeatable Patterns
+ * 3.0 - Basic Structure
+ * 4.0 - Header
+ *   4.1 - Site Header
+ *   4.2 - Navigation
+ * 5.0 - Content
+ *   5.1 - Entry Header
+ *   5.2 - Entry Meta
+ *   5.3 - Entry Content
+ *   5.4 - Galleries
+ *   5.5 - Post Formats
+ *   5.6 - Attachments
+ *   5.7 - Post/Paging Navigation
+ *   5.8 - Author Bio
+ *   5.9 - Archives
+ *   5.10 - Search Results/No posts
+ *   5.11 - 404
+ *   5.12 - Comments
+ *   5.13 - Multisite
+ * 6.0 - Sidebar
+ *   6.1 - Widgets
+ * 7.0 - Footer
+ * 8.0 - Media Queries
+ * 9.0 - Print
+ * ----------------------------------------------------------------------------
+ */
+
+/**
+ * 1.0 Reset
+ *
+ * Modified from Normalize.css to provide cross-browser consistency and a smart
+ * default styling of HTML elements.
+ *
+ * @see http://git.io/normalize
+ * ----------------------------------------------------------------------------
+ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	clear: both;
+	font-family: "Source Sans Pro", Helvetica, sans-serif;
+	line-height: 1;
+}
+
+h1 {
+	font-size: 35px;
+	width: 98%;
+	border-bottom: 1px #db3754 solid;
+	padding-bottom: 8px;
+}
+
+h2 {
+	font-size: 30px;
+	margin: 10px 0;
+}
+
+h3 {
+	font-size: 22px;
+	margin: 10px 0 8px 0;
+}
+
+h4 {
+	font-size: 20px;
+	margin: 5px 0;
+}
+
+h5 {
+	font-size: 18px;
+	margin: 4px 0;
+}
+
+p {
+	margin: 0 0 12px;
+}
+
+a {
+	color: #c62841;
+	text-decoration: none;
+}
+
+.wp-caption .wp-caption-text,
+.entry-caption,
+.gallery-caption {
+	color: #db3754;
+	font-size: 18px;
+	font-style: italic;
+	font-weight: 300;
+	margin: 0 0 24px;
+}
+
+hr {
+	border: 1px solid #888;
+}
+
+/**
+ * 2.0 Repeatable Patterns
+ * ----------------------------------------------------------------------------
+ */
+
+input,
+textarea {
+	border: #db3754 1px grey;
+	font-family: inherit;
+	padding: 5px;
+}
+
+/* Buttons */
+button,
+input[type="submit"],
+input[type="button"],
+input[type="reset"] {
+	border-bottom: none;
+	border: #db3754 4px solid;
+	border-radius: 2px;
+	background: #db3754;
+	-webkit-transition: 0.2s;
+	-o-transition: 0.2s;
+	transition: 0.2s;
+}
+
+button:hover,
+button:focus,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+input[type="reset"]:hover,
+input[type="submit"]:focus,
+input[type="button"]:focus,
+input[type="reset"]:focus {
+	border: #db3754 4px solid;
+	background: #db3754;
+	color: #c62841;
+}
+
+/*button:active,
+input[type="submit"]:active,
+input[type="button"]:active,
+input[type="reset"]:active {
+	background: #ffffff;
+	border: #db3754 4px solid;
+	padding: 11px 24px 10px;
+}*/
+
+/**
+ * 4.0 Header
+ * ----------------------------------------------------------------------------
+ */
+
+/**
+ * 4.1 Site Header
+ * ----------------------------------------------------------------------------
+ */
+
+.site-title {
+	width: 53%;
+	color:black;
+	font-size: 30px;
+	font-weight: bold;
+	line-height: 1;
+	margin-top: 12px;
+	padding: 10px 20px 10px 20px;
+	cursor: pointer;
+	display: inline-block;
+	background-color: transparent;
+	background-image: url(images/headers/wood.png);
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	-moz-box-shadow: -7px 7px 15px 0px #333;
+	-webkit-box-shadow: -7px 7px 15px 0px #333;
+	-o-box-shadow: -7px 7px 15px 0px #333;
+	box-shadow: -7px 7px 15px 0px #333;
+	filter:progid:DXImageTransform.Microsoft.Shadow(color=#333, Direction=225, Strength=15);
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	border: none;
+}
+
+.site-title span {
+	font-size: 18px;
+	font-weight: 500;
+	/*line-height: 12px;*/
+}
+
+.site-header .site-title:hover {
+	text-decoration: underline;
+}
+
+.site-header img.logo {
+	width: 44px;
+	margin-left: 20px;
+	margin-top: -4px;
+}
+
+.site-header img#titre_site {
+	width: 600px;
+	margin-top: 20px;
+}
+
+.site-header img#logo_site {
+	margin-left: 210px;
+	width: 80px;
+}
+
+.site-description {
+	font: 300 italic 24px "Source Sans Pro", Helvetica, sans-serif;
+	margin: 0 0 0 20px;
+	display: inline-block;
+}
+
+.site-header #recherche_activite {
+	text-align: center;
+	margin-top: 15px;
+}
+
+.site-header #recherche_activite p {
+	margin: 0;
+}
+
+.site-header #recherche_activite p.pages_autres {
+	text-align: right;
+}
+
+.site-header #recherche_activite p:first-child input {
+	width: 35%;
+	padding: 8px 15px;
+	min-width: 200px;
+	border: #db3754 4px solid;
+	box-sizing:border-box;
+	border-radius: 2px 0 0 2px;
+}
+
+.site-header #recherche_activite p:first-child input[type="submit"] {
+	width: 20%;
+	box-sizing:border-box;
+	border-radius: 0 2px 2px 0;
+}
+
+/**
+ * 4.2 Navigation
+ * ----------------------------------------------------------------------------
+ */
+
+
+.nav-menu li:hover > a,
+.nav-menu li a:hover,
+.nav-menu li:focus > a,
+.nav-menu li a:focus {
+	background-color: #db3754;
+	color: #fff;
+}
+
+.nav-menu .sub-menu,
+.nav-menu .children {
+	background-color: #db3754;
+	border-top: 0;
+	padding: 0;
+	position: absolute;
+	left: 0px;
+	z-index: 99999;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	clip: rect(1px, 1px, 1px, 1px);
+}
+
+ul.nav-menu ul a:hover,
+.nav-menu ul ul a:hover,
+ul.nav-menu ul a:focus,
+.nav-menu ul ul a:focus {
+	background-color: #c62841;
+}
+
+.nav-menu .current_page_item > a,
+.nav-menu .current_page_ancestor > a,
+.nav-menu .current-menu-item > a,
+.nav-menu .current-menu-ancestor > a {
+	color: #c62841;
+	font-style: italic;
+	font-weight: bold;
+}
+
+/* Mediaelements 
+.hentry .mejs-mediaelement,
+.hentry .mejs-container .mejs-controls {
+	background: #db3754;
+}
+
+/* Audio */
+.format-audio {
+	background-color: #c62841;
+}
+
+.format-link .entry-title {
+	color: #c62841;
+	display: inline;
+	font: 300 italic 20px "Source Sans Pro", Helvetica, sans-serif;
+	margin-right: 20px;
+}
+
+/* Video */
+.format-video {
+	background-color: #c62841;
+}
+
+.format-video .entry-title {
+	font-size: 50px;
+	font-weight: 400;
+}
+
+.format-video .entry-meta {
+	color: #db3754;
+}
+
+/**
+ * 5.0 Content
+ * ----------------------------------------------------------------------------
+ */
+
+.hentry {
+	padding: 20px 0;
+}
+
+.sidebar .entry-header {
+	padding: 0 176px 0 0px;
+
+}
+
+.sidebar .entry-header,
+.sidebar .entry-content,
+.sidebar .entry-summary,
+.sidebar .entry-meta {
+	max-width: 1040px;
+	padding: 0 315px 0 0px;
+}
+
+/**
+ * 5.1 Entry Header
+ * ----------------------------------------------------------------------------
+ */
+
+.entry-header {
+	margin-bottom: 15px;
+}
+
+.entry-title {
+	color: #db3754;
+}
+
+/**
+ * 5.3 Entry Content
+ * ----------------------------------------------------------------------------
+ */
+
+.page_mjc_accueil {
+	max-width: 1156px;
+	padding: 0!important;
+}
+
+.page_mjc_accueil .bloc_accueil {
+	display: inline-block;
+	width: 31%;
+	margin-right: 10px;
+	height: 300px;
+	background-color: transparent;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	border-radius: 10px 10px 2px 2px;
+	overflow: hidden;
+	cursor: context-menu;
+}
+
+.page_mjc_accueil .bloc_accueil > div {
+	height: 300px;
+	width: 100%;
+	margin-top: 255px;
+	background : #8fc855;
+	color: white;
+	text-align: center;
+	font-size: 22px;
+	font-weight: bold;
+	-webkit-transition: 0.5s;
+	-o-transition: 0.5s;
+	transition: 0.5s;
+}
+
+.page_mjc_accueil .bloc_accueil:hover > div {
+	margin-top: 0px;
+	/*padding-top: 135px;*/
+	background : rgba(150,204,57,0.8);
+}
+
+.page_mjc_accueil .bloc_accueil > div > p:nth-child(1) {
+	background: #8fc855;
+}
+
+.page_mjc_accueil .bloc_accueil > div > p:nth-child(2) {
+	font-size: 17px;
+	font-weight: 300;
+	padding: 5px 15px;
+}
+
+.page_mjc_accueil .bloc_accueil > div > a {
+	display: inline-block;
+	background: #8fc855;
+	text-decoration: none;
+	width: 80%;
+	font-size: 20px;
+	padding: 0;
+	color: white;
+	border-radius: 2px;
+}
+
+.page_mjc_accueil .bloc_accueil > div > a:hover {
+	color: #db3754;
+}
+
+.page_mjc_accueil > div.actus {
+	border-radius: 2px;
+	margin-bottom: 20px;
+	padding: 0;
+	border-bottom: 1px #db3754 solid;
+	margin-right: 40px;
+}
+
+.page_mjc_accueil > div.actus div {
+	display: inline-block;
+	margin: 0;
+	padding: 5px 15px;
+}
+
+.page_mjc_accueil > div.actus > a {
+	text-decoration: none;
+	color: white;
+}
+
+.page_mjc_accueil > div.actus > a > div {
+	width: 80px;
+	text-align: center;
+	font-weight: bold;
+	background: #db3754;
+}
+
+.page_mjc_accueil > div.actus > div {
+	width: 87%;
+	color: #333;
+}
+
+.page_mjc_accueil > .bloc_accueil:nth-child(2) {
+	background-image: url(images/accueil/danse.jpg);
+}
+
+.page_mjc_accueil > .bloc_accueil:nth-child(3) {
+	background-image: url(images/accueil/rando.jpg);
+}
+
+.page_mjc_accueil > .bloc_accueil:nth-child(4) {
+	background-image: url(images/accueil/tag.jpg);
+}
+
+.page_mjc_accueil > a {
+	text-decoration: none;
+	color: white;
+}
+
+.page_mjc_accueil > a > div {
+	cursor: pointer;
+	width: 400px;
+	height: 40px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.page_mjc_accueil > a > div button {
+	width: 100%;
+	margin-top: 20px;
+}
+
+.entry-content > .listes {
+	
+}
+
+.entry-content > .listes > a > div {
+	display: inline-block;
+	width: 48%;
+	padding: 0;
+	background: #ecf0f1;
+	vertical-align: text-top;
+}
+
+.entry-content > .liste_actus > a > div {
+	width: 96%;
+}
+
+.entry-content > .listes > a > div:nth-child(odd) {
+	margin: 10px 10px 10px 0px;
+}
+
+.entry-content > .listes > a > div:nth-child(even) {
+	margin: 10px 0px 10px 10px;
+
+}
+
+.entry-content > .listes > a > div > div {
+	display: inline-block;
+	width: 64%;
+	padding: 0;
+	vertical-align: text-top;
+}
+
+.entry-content > .listes > a > div > div.cover {
+	width: 30%;
+	height: 110px;
+	margin: 0 10px 0 0;
+	overflow: hidden;
+}
+
+.entry-content > .listes > a > div > div.cover > div {
+	width: 100%;
+	height: 110%;
+	background-color: transparent;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	transition: all 0.5s ease;
+}
+
+.entry-content > .listes > a:hover > div > div.cover > div {
+	-webkit-transform:scale(1.25); /* Safari and Chrome */
+    -moz-transform:scale(1.25); /* Firefox */
+    -ms-transform:scale(1.25); /* IE 9 */
+    -o-transform:scale(1.25); /* Opera */
+     transform:scale(1.25);
+}
+
+.entry-content > .listes > a > div > div.contenu h2 {
+	font-size: 20px;
+	margin: 0;
+}
+
+.entry-content > .listes > a > div > div.contenu > p {
+	margin: 0;
+}
+
+/* Présentation d'un seul activité/actualité */
+.entry-content > .presentation > div {
+	display: inline-block;
+}
+
+.entry-content > .presentation > .photo {
+	width: 40%;
+}
+
+.entry-content > .presentation > .contenu {
+	width: 50%;
+	padding-left: 20px;
+	vertical-align: top;
+}
+
+.entry-content > .presentation > .contenu > p {
+	margin: 0;
+}
+
+/**
+ * 5.6 Attachments
+ * ----------------------------------------------------------------------------
+ */
+
+.attachment .entry-meta a,
+.attachment .entry-meta .edit-link:before,
+.attachment .full-size-link:before {
+	color: #c62841;
+}
+
+.post-navigation {
+	background-color: #fff;
+	color: #c62841;
+	font-size: 20px;
+	font-style: italic;
+	font-weight: 300;
+	padding: 20px 0;
+}
+
+/**
+ * 5.8 Author Bio
+ * ----------------------------------------------------------------------------
+ */
+
+.author-link {
+	color: #c62841;
+	margin-left: 2px;
+}
+
+/**
+ * 5.9 Archives
+ * ----------------------------------------------------------------------------
+ */
+
+.site-footer .sidebar-container {
+	background-color: #db3754;
+	padding: 0;
+}
+
+@media (max-width: 643px) {
+
+	.toggled-on .nav-menu > li a:hover,
+	.toggled-on .nav-menu > ul a:hover {
+		background-color: #c62841;
+		color: #fff;
+	}
+
+	.toggled-on .nav-menu > li a:focus,
+	.toggled-on .nav-menu > ul a:focus {
+		background-color: #db3754;
+		color: #fff;
+	}
+}
+
+/**
+ * 6.1 Widgets
+ * ----------------------------------------------------------------------------
+ */
+
+.widget .widget-title {
+	font: 800 italic 20px "Source Sans Pro", Helvetica, sans-serif;
+    color: #db3754;
+    border: 5px solid #db3754;
+    border-radius: 2px;
+    background: white;
+    margin-right: 20px;
+    margin-top: -27px;
+    margin-left: 20px;
+    border-radius: 20px;
+}
+
+.widget {
+	text-align: center;
+	background-color: #8fc855;
+	border-radius: 2px;
+	padding: 10px;
+	margin-bottom: 40px;
+}
+
+.widget > h3:first-child {
+	display: none;
+}
+
+.widget > form {
+	background-color: #f7f5e7;
+    border-radius: 2px;
+    margin-top: 10px;
+    margin-bottom: 10;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+.widget p {
+	margin: 0 0 4px 0;
+}
+
+.widget input {
+	border-radius: 2px;
+}
+
+.widget input[type="text"],
+.widget input[type="email"],
+.widget select
+{
+	width: 90%;
+	padding: 2px 6px;
+}
+
+.widget select#mjc_recherche_activite_age {
+	width: 20%;
+	min-width: 50px;
+}
+
+.widget select#mjc_recherche_activite_domaine {
+	width: 20%;
+	min-width: 100px;
+}
+
+.widget input[type="submit"] {
+	width: 30%;
+	height: 30px;
+	margin-top: 4px;
+	padding: 3px 8px;
+	min-width: 50px;
+}
+
+/**
+ * 7.0 Footer
+ * ----------------------------------------------------------------------------
+ */
+
+ .site-info {
+	padding: 10px 0;
+}
+
+.sidebar .site-footer .widget {
+	width: 410px;
+	padding: 0;
+	margin-bottom: 0;
+}
+
+.sidebar .site-footer .widget-area {
+	max-width: 1024px;
+	position: relative;
+	left: -8px;
+}
+
+.widget#mjc_partenaires-2 {
+	text-align: center;
+	border-radius: 2px;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
+.widget#mjc_partenaires-2 .widget-title {
+	font: 800 italic 20px "Source Sans Pro", Helvetica, sans-serif;
+    color: #db3754;
+    border: 5px solid #db3754;
+    border-radius: 2px;
+    background: white;
+    margin-right: 20px;
+    margin-top: 0;
+    margin-left: 20px;
+    border-radius: 20px;
+}
+
+.widget#mjc_partenaires-2 img {
+	max-height: 100px;
+	vertical-align: sub!important;
+}
+
+.widge#mjc_partenaires-2t p {
+	margin: 0 0 4px 0;
+}
+
+
+
+
+
+
+
+.page_recherche_activites input {
+	margin-top: 10px;
+	padding: 8px 15px;
+	min-width: 200px;
+}
+
+.page_recherche_activites button:active,
+.page_recherche_activites input[type="submit"]:active,
+.page_recherche_activites input[type="button"]:active,
+.page_recherche_activites input[type="reset"]:active {
+	padding: 8px 15px;
+}
+
+.page_recherche_activites input[type="text"] {
+	width: 60%;
+}
+
+.page_recherche_activites input[type="submit"] {
+	width: 20%;
+}
+
+
+
+
+
+
+
+/* Formulaire page CONTACT */
+#wpcf7-f82-p226-o1 form {
+	
+}
+
+#wpcf7-f82-p226-o1 form input[type="text"],
+#wpcf7-f82-p226-o1 form input[type="email"],
+#wpcf7-f82-p226-o1 form input[type="text"],
+#wpcf7-f82-p226-o1 form textarea {
+	padding: 2px 6px;
+	border-radius: 2px;
+}
