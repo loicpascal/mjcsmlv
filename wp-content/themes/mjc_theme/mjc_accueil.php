@@ -7,8 +7,6 @@ get_header(); ?>
 <?php
 $actu = $wpdb->get_row( "SELECT * FROM mjc_actus ORDER BY date_actu DESC LIMIT 1" );
 
-
-
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
@@ -17,13 +15,12 @@ $actu = $wpdb->get_row( "SELECT * FROM mjc_actus ORDER BY date_actu DESC LIMIT 1
 			<a href="<?php echo get_permalink(10); ?>">
 				<div>Actus</div>
 			</a>
-			<div><b><?php echo trim(stripslashes($actu->jour_heure)); ?></b> : <?php echo trim(stripslashes($actu->nom)); ?> - <?php echo trim(stripslashes(substr($actu->descriptif, 0, 45))) . "..."; ?></div>
+			<div><b><?php echo trim(stripslashes($actu->jour_heure)); ?></b> : <?php echo trim(stripslashes($actu->nom)) . ($actu->descriptif ? trim(stripslashes(substr($actu->descriptif, 0, 45))) . "..." : ''); ?></div>
 		</div>
 		<div class="bloc_accueil">
 			<div>
 				<p>ACTIVITES</p>
-				<p>Retouvez toutes les activités proposées par la MJC...</p>
-				<?php foreach (wp_get_nav_menu_items('Menu 1') as $item) { 
+				<?php foreach (wp_get_nav_menu_items(2) as $item) { 
 					if ($item->post_parent == 6) {
 				?>
 					<a href="<?php echo $item->url ?>"><?php echo $item->title ?></a>
@@ -54,7 +51,7 @@ $actu = $wpdb->get_row( "SELECT * FROM mjc_actus ORDER BY date_actu DESC LIMIT 1
 				<a href="<?php echo get_permalink(10); ?>">Voir toutes les actus</a>
 			</div>
 		</div>
-		<a target="_blank" href="http://www.mjc-saintmarcellesvalence.fr/wp-content/uploads/2016/05/Programme-2015-2016.pdf" title="Télécharger la plaquette des activités">
+		<a target="_blank" href="http://www.mjc-saintmarcellesvalence.fr/wp-content/uploads/2017/08/programme-mjc-saint-marcel-2017-2018.pdf" title="Télécharger la plaquette des activités">
 			<div>
 				<button>Télécharger la plaquette des activités</button>
 			</div>

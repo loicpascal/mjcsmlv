@@ -1,0 +1,19 @@
+.accordeon {
+	cursor: pointer;
+}
+
+.accordeon + table {
+	/*display: none;*/
+}
+
+.p_newsletter, .p_activites {
+	min-width: 50%;
+}
+
+.p_newsletter tr:nth-child(even), .p_activites tr:nth-child(even) {
+	background: #eee;
+}
+
+#photo_activite {
+    height: 100px;
+}

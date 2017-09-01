@@ -5,15 +5,15 @@ class Newsletter
 {
     public function __construct()
     {
-    	// add_action( 'widgets_init' , function() {register_widget( 'NewsletterWidget' );});
+    	add_action('wp_loaded', array($this, 'delete_email'));
 
     	add_action( 'widgets_init', function(){
 			register_widget( 'NewsletterWidget' );
 		});
 		add_action('wp_loaded', array($this, 'save_email'));
 		add_action('admin_menu', array($this, 'add_admin_menu'));
-		add_action('admin_menu', array($this, 'add_admin_sub_menu'));
-		add_action('admin_init', array($this, 'register_settings'));
+		// add_action('admin_menu', array($this, 'add_admin_sub_menu'));
+		// add_action('admin_init', array($this, 'register_settings'));
     }
 
     /**
@@ -40,6 +40,59 @@ class Newsletter
 	    $wpdb->query("DROP TABLE IF EXISTS mjc_newsletter;");
 	}
 
+	public function add_admin_menu()
+	{
+		// add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
+		$hook = add_menu_page('Newsletter', 'Newsletter', 'manage_options', 'mjc_newsletter', array($this, 'tab_email'));
+		add_action('load-'.$hook, array($this, 'process_action'));
+	}
+
+	public function tab_email()
+	{
+		$emails = $this->getAllFromOrderBy('mjc_newsletter', 'date DESC');
+	    echo '<h1>'.get_admin_page_title().'</h1>';
+	    echo '<p>Liste des E-mails</p>';
+	    if (isset($_GET['mjc_newsletter_supprimer_email']) && !empty($_GET['mjc_newsletter_supprimer_email'])) {
+            echo '<p style="color:#2ecc71">E-mail supprimé avec succès</p>';
+        }
+	    echo '<hr/>';
+	    ?>
+		<table class="widefat page fixed p_newsletter" cellspacing="0" style="width:auto;">
+            <thead>
+                <tr>
+                    <th>Actions</th>
+                    <th>Email</th>
+                    <th>Date d'enregistrement</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ( $emails as $email )
+                {
+                ?>
+                    <tr>
+                    	<td style="text-align: center;"><a class="js-confirm" title="Supprimer" data-confirm="supprimer l'email '<?php echo trim(stripslashes($email->email)); ?>'" href="?page=mjc_newsletter_liste&mjc_newsletter_supprimer_email=<?php echo $email->id; ?>"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
+                        </a></td>
+                        <td><?php echo $email->email; ?></td>
+                        <td ><?php echo date('d/m/Y H:i:s', strtotime($email->date)); ?></td>
+                    </tr>
+                <?php
+                }
+                ?>
+            </tbody>
+        </table>
+
+	    <?php
+	    $this->addJSCSS();
+	}
+
+	public function process_action()
+	{
+	    if (isset($_GET['mjc_newsletter_supprimer_email'])) {
+            $this->delete_email();
+        }
+	}
+
 	/**
 	 * Enregistre le mail du visiteur dans la table 'mjc_newsletter'
 	 * @return [type] [description]
@@ -58,128 +111,46 @@ class Newsletter
 	    }
 	}
 
-	public function add_admin_menu()
-	{
-		// add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
-		$hook = add_menu_page('Newsletter', 'Newsletter', 'manage_options', 'mjc_newsletter', array($this, 'menu_html'));
-		add_action('load-'.$hook, array($this, 'process_action'));
-	}
-
-	public function add_admin_sub_menu()
-	{
-		// add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
-		add_submenu_page('mjc_newsletter', 'Liste des mails', 'Liste', 'manage_options', 'mjc_newsletter_liste', array($this, 'tab_email'));
-	}
-
-	public function menu_html()
-	{
-	    echo '<h1>'.get_admin_page_title().'</h1>';
-	    echo '<p>Bienvenue sur la page d\'accueil du plugin</p>';
-	    echo '<hr/>';
-	    ?>
-	    <form method="post" action="options.php">
-	    <?php settings_fields('mjc_newsletter_settings') ?>
-	    <?php do_settings_sections('mjc_newsletter_settings') ?>
-		<?php submit_button(); ?>
-    	</form>
-
-    	<form method="post" action="">
-		    <input type="hidden" name="send_newsletter" value="1"/>
-		    <?php submit_button('Envoyer la newsletter') ?>
-		</form>
-	    <?php
-	    echo '<p>Dernier email enregistré : ' . $this->getLastEmail()->email . '</p>';
-	}
-
 	/**
-	 * Affichage HTML du champ Expéditeur
-	 * @return [type] [description]
-	 */
-	public function sender_html()
-	{
-		?>
-	    <input type="text" name="zero_newsletter_sender" value="<?php echo get_option('zero_newsletter_sender')?>"/>
-	    <?php
-	}
-
-	/**
-	 * Affichage HTML du champ Objet
-	 * @return [type] [description]
-	 */
-	public function object_html()
-	{
-		?>
-	    <input type="text" name="zero_newsletter_object" value="<?php echo get_option('zero_newsletter_object')?>"/>
-	    <?php
-	}
-
-	/**
-	 * Affichage HTML du champ Objet
-	 * @return [type] [description]
-	 */
-	public function body_html()
-	{
-		?>
-	    <textarea name="mjc_newsletter_body"><?php echo get_option('mjc_newsletter_body')?></textarea>
-	    <?php
-	}
-
-	public function tab_email()
-	{
-	    echo '<h1>'.get_admin_page_title().'</h1>';
-	    echo '<p>Bienvenue sur la page d\'accueil du plugin</p>';
-	    echo '<hr/>';
-	    
-	    echo '<p>Dernier email enregistré : ' . $this->getLastEmail()->email . '</p>';
-	}
-
-	/**
-	 * Renvoi le dernier email enregistré
-	 * @return [type] [description]
-	 */
-	private function getLastEmail()
-	{
-		global $wpdb;
-		$row = $wpdb->get_row("SELECT * FROM mjc_newsletter ORDER BY date DESC LIMIT 1;");
-
-		if(!is_null($row)) {
-			return $row;
-		}
-		return null;
-	}
-
-	public function register_settings()
-	{
-	    register_setting('mjc_newsletter_settings', 'mjc_newsletter_sender');
-	    add_settings_section('mjc_newsletter_section', 'Paramètres d\'envoi', array($this, 'section_html'), 'mjc_newsletter_settings');
-	    add_settings_field('mjc_newsletter_sender', 'Expéditeur', array($this, 'sender_html'), 'mjc_newsletter_settings', 'mjc_newsletter_section');
-	    add_settings_field('mjc_newsletter_object', 'Objet', array($this, 'object_html'), 'mjc_newsletter_settings', 'mjc_newsletter_section');
-	    add_settings_field('mjc_newsletter_body', 'Message', array($this, 'body_html'), 'mjc_newsletter_settings', 'mjc_newsletter_section');
-	}
-
-	public function section_html()
-	{
-	    echo 'Renseignez les paramètres d\'envoi de la newsletter.';
-	}
-
-	public function process_action()
-	{
-	    if (isset($_POST['send_newsletter'])) {
-	        $this->send_newsletter();
+     * Supprime l'email
+     * @return [type] [description]
+     */
+    public function delete_email()
+    {
+    	if (isset($_GET['mjc_newsletter_supprimer_email'])) {
+	        global $wpdb;
+	        $id = $_GET['mjc_newsletter_supprimer_email'];
+	        $wpdb->delete("mjc_newsletter", array( 'id' => $id));
 	    }
-	}
+    }
 
-	public function send_newsletter()
-	{
-	    global $wpdb;
-	    $destinataires = $wpdb->get_results("SELECT email FROM mjc_newsletter");
-	    $object = get_option('mjc_newsletter_object', 'Newsletter');
-	    $content = get_option('mjc_newsletter_message', 'Mon contenu');
-	    $sender = get_option('mjc_newsletter_sender', 'no-reply@example.com');
-	    $header = array('From: '.$sender);
+	private function addJSCSS() {
+        // JS
+        wp_register_script( 'jquery3', includes_url() . '/js/jquery/jquery-3.0.0.min.js');
+        wp_enqueue_script('jquery3');
 
-	    foreach ($destinataires as $destinataire) {
-	        $result = wp_mail($destinataire->email, $object, $content, $header);
-	    }
-	}
+        wp_register_script( 'custom_jquery', plugins_url('/js/main.js', __FILE__));
+        wp_enqueue_script('custom_jquery');
+
+        // CSS
+        wp_register_style( 'font-awesome', includes_url() . '/css/font-awesome/css/font-awesome.min.css');
+        wp_enqueue_style('font-awesome');
+
+        wp_register_style( 'custom_css', includes_url() . '/css/mjc/custom_css.css');
+        wp_enqueue_style('custom_css');
+    }
+
+	/**
+     *
+     *  Méthodes Bases de données
+     * 
+     */
+
+    public function getAllFromOrderBy( $table , $order = null ) {
+        $order = ($order == null) ? '' : 'ORDER BY ' . $order;
+
+        global $wpdb;
+        return $wpdb->get_results( "SELECT * FROM $table $order" );
+    }
+
 }

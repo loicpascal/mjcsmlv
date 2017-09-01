@@ -1,4 +1,5 @@
 <?php
+require_once( ABSPATH . 'wp-includes/mjc/class/MjcParagraphe.class.php');
 
 class Actus
 {
@@ -7,10 +8,12 @@ class Actus
     public function __construct()
     {
         // add_action( 'widgets_init' , function() {register_widget( 'NewsletterWidget' );});
+        $actions = array('insert_actu', 'update_actu', 'delete_actu');
 
-        add_action('wp_loaded', array($this, 'insert_actu'));
-        add_action('wp_loaded', array($this, 'update_actu'));
-        add_action('wp_loaded', array($this, 'delete_actu'));
+        foreach ($actions as $action) {
+            add_action('wp_loaded', array($this, $action));
+        }
+
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('admin_menu', array($this, 'add_admin_sub_menu'));
         add_action('admin_init', array($this, 'register_settings'));
@@ -129,7 +132,7 @@ class Actus
                 <?php
                 foreach ( $actuss as $actus )
                 {
-                    echo '<option value="' . $actus->id . '"' . ((( isset($_POST['mjc_actus_modifier_actus']) && !empty($_POST['mjc_actus_modifier_actus']) ) && ($_POST['mjc_actus_modifier_actus'] == $actus->id)) ? 'selected="selected"' : '') . '>' . trim(stripslashes($actus->nom . ' / ' . $actus->jour_heure)) . '</option>';
+                    echo '<option value="' . $actus->id . '"' . ((( isset($_POST['mjc_actus_modifier_actus']) && !empty($_POST['mjc_actus_modifier_actus']) ) && ($_POST['mjc_actus_modifier_actus'] == $actus->id)) ? 'selected="selected"' : '') . '>' . MjcParagraphe::epure($actus->nom . ' / ' . $actus->jour_heure) . '</option>';
                 }
                 ?>
             </select>
@@ -170,7 +173,7 @@ class Actus
                 <?php
                 foreach ( $actuss as $actus )
                 {
-                    echo '<option value="' . $actus->id . '">' . trim(stripslashes($actus->nom . ' / ' . $actus->intervenant_prenom . ' ' . $actus->intervenant_nom . ' / ' . $actus->tranche_age_nom)) . '</option>';
+                    echo '<option value="' . $actus->id . '">' . MjcParagraphe::epure($actus->nom . ' / ' . $actus->intervenant_prenom . ' ' . $actus->intervenant_nom . ' / ' . $actus->tranche_age_nom) . '</option>';
                 }
                 ?>
             </select>
@@ -190,6 +193,17 @@ class Actus
     {
         echo '<h1>'.get_admin_page_title().'</h1>';
         echo '<p>Toutes les actus</p>';
+        ?>
+        <p><b>Améliorations</b></p>
+        <p>
+            <ul style="list-style-type: circle;">
+                <li>En <span style ="color:green">vert</span> : les actus en ligne</li>
+                <li>En <span style ="color:red">rouge</span> : les actus hors ligne</li>
+                <li>Les dates sont au bon format (j/mm/aaaa)</li>
+            </ul>
+        </p>
+
+        <?php
         echo '<hr/>';
         $actuss = $this->getAllactussOrderByDesc('date_actu');
         // print_r($actuss);
@@ -197,7 +211,6 @@ class Actus
         <table class="widefat page fixed" cellspacing="0">
             <thead>
                 <tr>
-                    <th scope="col" id="date" class="manage-column" style="">N°</th>
                     <th scope="col" id="date" class="manage-column" style="">Nom</th>
                     <th scope="col" id="date" class="manage-column" style="">Tarif</th>
                     <th scope="col" id="date" class="manage-column" style="">Date</th>
@@ -207,7 +220,6 @@ class Actus
 
             <tfoot>
                 <tr>
-                    <th scope="col" id="date" class="manage-column" style="">N°</th>
                     <th scope="col" id="date" class="manage-column" style="">Nom</th>
                     <th scope="col" id="date" class="manage-column" style="">Tarif</th>
                     <th scope="col" id="date" class="manage-column" style="">Date</th>
@@ -218,19 +230,13 @@ class Actus
                 <?php
                 foreach ( $actuss as $actus )
                 {
+                    $color = $actus->publie ? "style='color:green'" : "style='color:red'";
                 ?>
                     <tr id="voy_">
-                        <td >
-                            <form method="get" action="">
-                                <input type="hidden" name="page" value="mjc_actus_modifier" />
-                                <input type="hidden" name="id_actus" value="<?php echo $actus->id; ?>" />
-                                <input type="submit" value="<?php echo $actus->id; ?>" />
-                            </form>
-                        </td>
-                        <td ><?php echo trim(stripslashes($actus->nom)); ?></td>
-                        <td ><?php echo trim(stripslashes($actus->tarif)); ?></td>
-                        <td ><?php echo $actus->date_actu; ?></td>
-                        <td ><?php echo trim(stripslashes($actus->jour_heure)); ?></td>
+                        <td><a href="?page=mjc_actus_modifier&id_actus=<?php echo $actus->id ?>" <?php echo $color; ?>><?php echo MjcParagraphe::epure($actus->nom); ?></a></td>
+                        <td ><?php echo MjcParagraphe::epure($actus->tarif); ?></td>
+                        <td ><?php echo date('d/m/Y', strtotime($actus->date_actu)); ?></td>
+                        <td ><?php echo MjcParagraphe::epure($actus->jour_heure); ?></td>
                     </tr>
                 <?php
                 }
@@ -252,29 +258,30 @@ class Actus
         add_settings_section('mjc_actus_ajouter_section', 'Ajouter une actu', array($this, 'section_ajouter_html'), 'mjc_actus_ajouter_settings');
         add_settings_section('mjc_actus_modifier_section', 'Modifier une actu', array($this, 'section_modifier_html'), 'mjc_actus_modifier_settings');
 
-        /** add_settings_field( $id, $title, $callback, $page, $section, $args ); **/
-        add_settings_field('mjc_actus_id', 'N°', array($this, 'id_html'), 'mjc_actus_ajouter_settings', 'mjc_actus_ajouter_section');
-        add_settings_field('mjc_actus_nom', 'Nom', array($this, 'nom_html'), 'mjc_actus_ajouter_settings', 'mjc_actus_ajouter_section');
-        add_settings_field('mjc_actus_tarif', 'Tarif', array($this, 'tarif_html'), 'mjc_actus_ajouter_settings', 'mjc_actus_ajouter_section');
-        add_settings_field('mjc_actus_jour_heure', 'Jour/Heure', array($this, 'jour_heure_html'), 'mjc_actus_ajouter_settings', 'mjc_actus_ajouter_section');
-        add_settings_field('mjc_actus_lieu', 'Lieu', array($this, 'lieu_html'), 'mjc_actus_ajouter_settings', 'mjc_actus_ajouter_section');
-        add_settings_field('mjc_actus_date_actu', 'Date', array($this, 'date_actu_html'), 'mjc_actus_ajouter_settings', 'mjc_actus_ajouter_section');
-        add_settings_field('mjc_actus_photo', 'Photo', array($this, 'photo_html'), 'mjc_actus_ajouter_settings', 'mjc_actus_ajouter_section');
-        add_settings_field('mjc_actus_descriptif', 'Descriptif', array($this, 'descriptif_html'), 'mjc_actus_ajouter_settings', 'mjc_actus_ajouter_section');
-        add_settings_field('mjc_actus_date_debut_publication', 'Début publication', array($this, 'date_debut_publication_html'), 'mjc_actus_ajouter_settings', 'mjc_actus_ajouter_section');
-        add_settings_field('mjc_actus_date_fin_publication', 'Fin publication', array($this, 'date_fin_publication_html'), 'mjc_actus_ajouter_settings', 'mjc_actus_ajouter_section');
+        $settings_fields_liste = array(
+            'id' => 'N°',
+            'nom' => 'Nom',
+            'tarif' => 'Tarif',
+            'jour_heure' => 'Jour/Heure',
+            'lieu' => 'Lieu',
+            'date_actu' => 'Date',
+            'photo' => 'Photo',
+            'descriptif' => 'Descriptif',
+            'date_debut_publication' => 'Début publication',
+            'date_fin_publication' => 'Fin publication',
+            'actif' => 'Actif'
+        );
 
+        // Éléments du formulaire d'ajout
+        foreach ($settings_fields_liste as $key => $value) {
+            // add_settings_field( $id, $title, $callback, $page, $section, $args );
+            add_settings_field('mjc_actus_' . $key, $value, array($this, $key . '_html'), 'mjc_actus_ajouter_settings', 'mjc_actus_ajouter_section');
+        }
 
-        add_settings_field('mjc_actus_id', 'N°', array($this, 'id_html'), 'mjc_actus_modifier_settings', 'mjc_actus_modifier_section');
-        add_settings_field('mjc_actus_nom', 'Nom', array($this, 'nom_html'), 'mjc_actus_modifier_settings', 'mjc_actus_modifier_section');
-        add_settings_field('mjc_actus_tarif', 'Tarif', array($this, 'tarif_html'), 'mjc_actus_modifier_settings', 'mjc_actus_modifier_section');
-        add_settings_field('mjc_actus_jour_heure', 'Jour/Heure', array($this, 'jour_heure_html'), 'mjc_actus_modifier_settings', 'mjc_actus_modifier_section');
-        add_settings_field('mjc_actus_lieu', 'Lieu', array($this, 'lieu_html'), 'mjc_actus_modifier_settings', 'mjc_actus_modifier_section');
-        add_settings_field('mjc_actus_date_actu', 'Date', array($this, 'date_actu_html'), 'mjc_actus_modifier_settings', 'mjc_actus_modifier_section');
-        add_settings_field('mjc_actus_photo', 'Photo', array($this, 'photo_html'), 'mjc_actus_modifier_settings', 'mjc_actus_modifier_section');
-        add_settings_field('mjc_actus_descriptif', 'Descriptif', array($this, 'descriptif_html'), 'mjc_actus_modifier_settings', 'mjc_actus_modifier_section');
-        add_settings_field('mjc_actus_date_debut_publication', 'Début publication', array($this, 'date_debut_publication_html'), 'mjc_actus_modifier_settings', 'mjc_actus_modifier_section');
-        add_settings_field('mjc_actus_date_fin_publication', 'Fin publication', array($this, 'date_fin_publication_html'), 'mjc_actus_modifier_settings', 'mjc_actus_modifier_section');
+        // Éléments du formulaire de modification
+        foreach ($settings_fields_liste as $key => $value) {
+            add_settings_field('mjc_actus_' . $key, $value, array($this, $key . '_html'), 'mjc_actus_modifier_settings', 'mjc_actus_modifier_section');
+        }
     }
 
     public function section_ajouter_html() {
@@ -310,7 +317,7 @@ class Actus
     public function nom_html() {
         $default_value = $this->getDefaultValueFromById('nom', 'mjc_actus');
         ?>
-        <input type="text" name="mjc_actus_nom" value="<?php echo trim(stripslashes($default_value)) ?>" size="50"/>
+        <input type="text" name="mjc_actus_nom" value="<?php echo MjcParagraphe::epure($default_value) ?>" size="50"/>
         <?php
     }
 
@@ -322,7 +329,7 @@ class Actus
     public function tarif_html() {
         $default_value = $this->getDefaultValueFromById('tarif', 'mjc_actus');
         ?>
-        <input type="text" name="mjc_actus_tarif" value="<?php echo trim(stripslashes($default_value)) ?>" size="30"/>
+        <input type="text" name="mjc_actus_tarif" value="<?php echo MjcParagraphe::epure($default_value) ?>" size="30"/>
         <?php
     }
 
@@ -346,7 +353,7 @@ class Actus
     public function jour_heure_html() {
         $default_value = $this->getDefaultValueFromById('jour_heure', 'mjc_actus');
         ?>
-        <input type="text" name="mjc_actus_jour_heure" value="<?php echo trim(stripslashes($default_value)) ?>" size="30"/>
+        <input type="text" name="mjc_actus_jour_heure" value="<?php echo MjcParagraphe::epure($default_value) ?>" size="30"/>
         <?php
     }
 
@@ -358,7 +365,7 @@ class Actus
     public function lieu_html() {
         $default_value = $this->getDefaultValueFromById('lieu', 'mjc_actus');
         ?>
-        <input type="text" name="mjc_actus_lieu" value="<?php echo trim(stripslashes($default_value)) ?>" size="30"/>
+        <input type="text" name="mjc_actus_lieu" value="<?php echo MjcParagraphe::epure($default_value) ?>" size="30"/>
         <?php
     }
 
@@ -386,7 +393,7 @@ class Actus
     public function descriptif_html() {
         $default_value = $this->getDefaultValueFromById('descriptif', 'mjc_actus');
         ?>
-        <textarea name="mjc_actus_descriptif" cols="50" rows="8"><?php echo trim(stripslashes($default_value)) ?></textarea>
+        <textarea name="mjc_actus_descriptif" cols="50" rows="8"><?php echo MjcParagraphe::epure($default_value) ?></textarea>
         <?php
     }
 
@@ -411,6 +418,19 @@ class Actus
         $default_value = $this->getDefaultValueFromById('date_fin_publication', 'mjc_actus');
         ?>
         <input type="date" name="mjc_actus_date_fin_publication" value="<?php echo $default_value ?>"/>
+        <?php
+    }
+
+    /**
+     * Si modification : récupère la valeur correspondant à l'actu
+     * Puis affiche le champs
+     * @return [type] [description]
+     */
+    public function actif_html() {
+        $default_value = in_array($this->getDefaultValueFromById('actif', 'mjc_actus'), array("",1)) ? 1 : 0;
+        ?>
+        <label for="mjc_actus_actif_1">Oui</label><input type="radio" name="mjc_actus_actif" id="mjc_actus_actif_1" value="1" <?php echo $default_value ? "checked" : "" ?>/>
+        <label for="mjc_actus_actif_0">Non</label><input type="radio" name="mjc_actus_actif" id="mjc_actus_actif_0" value="0" <?php echo $default_value ? "" : "checked" ?>/>
         <?php
     }
 
@@ -452,6 +472,7 @@ class Actus
             $descriptif             = ucfirst($_POST['mjc_actus_descriptif']);
             $date_debut_publication = $_POST['mjc_actus_date_debut_publication'];
             $date_fin_publication   = $_POST['mjc_actus_date_fin_publication'];
+            $actif   = $_POST['mjc_actus_actif'];
 
             $row = $wpdb->get_row("SELECT * FROM mjc_actus WHERE nom = '$nom'");
             if (is_null($row)) {
@@ -464,6 +485,7 @@ class Actus
                     'descriptif'             => $descriptif,
                     'date_debut_publication' => $date_debut_publication,
                     'date_fin_publication'   => $date_fin_publication,
+                    'actif'   => $actif,
                 ));
 
                 $id = $wpdb->insert_id;
@@ -503,7 +525,7 @@ class Actus
     }
 
     /**
-     * Modifie l'actu
+     * Met à jour l'actu en BDD
      * @return [type] [description]
      */
     public function update_actu()
@@ -524,6 +546,7 @@ class Actus
             $descriptif             = ucfirst($_POST['mjc_actus_descriptif']);
             $date_debut_publication = $_POST['mjc_actus_date_debut_publication'];
             $date_fin_publication   = $_POST['mjc_actus_date_fin_publication'];
+            $actif                  = $_POST['mjc_actus_actif'];
             $photo                  = "";
 
             if (isset($_FILES['mjc_actus_photo']) AND $_FILES['mjc_actus_photo']['error'] == 0) {
@@ -550,6 +573,8 @@ class Actus
                         move_uploaded_file($_FILES['mjc_actus_photo']['tmp_name'], $cheminComplet . $nomFichier);
                     }
                 }
+            } else {
+                $photo = $_POST['mjc_actus_photo_bak'];
             }
 
             // $row = $wpdb->get_row("SELECT * FROM mjc_actus WHERE nom = '$nom' AND id_domaine = '$domaine'");
@@ -565,6 +590,7 @@ class Actus
                     'descriptif'             => $descriptif,
                     'date_debut_publication' => $date_debut_publication,
                     'date_fin_publication'   => $date_fin_publication,
+                    'actif'   => $actif,
                     ),
                     array( 'id' => $id)
                 );
@@ -617,7 +643,12 @@ class Actus
 
     public function getAllactussOrderByDesc($order) {
         global $wpdb;
-        return $wpdb->get_results( "SELECT * FROM mjc_actus ORDER BY $order DESC" );
+        return $wpdb->get_results( "SELECT *, 
+            CASE
+                WHEN (CURDATE() BETWEEN `date_debut_publication` AND `date_fin_publication`) THEN 1
+                ELSE 0
+            END as publie 
+            FROM mjc_actus ORDER BY $order DESC" );
     }
 
     public function getAllFromOrderByWhere( $table , $where ) {

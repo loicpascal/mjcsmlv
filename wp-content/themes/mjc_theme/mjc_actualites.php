@@ -4,6 +4,7 @@
  */
 
 get_header();
+require_once( ABSPATH . 'wp-includes/mjc/class/MjcParagraphe.class.php');
 
 // Affichage d'une seule actualité
 if (isset($_GET['actu'])) {
@@ -21,9 +22,14 @@ if (isset($_GET['actu'])) {
 					<img src='wp-content/uploads/actus/<?php echo $actu->photo ?>' />
 				</div>
 				<div class='contenu'>
-					<p><?php echo $actu->jour_heure ?></p>
-					<p><?php echo trim(stripslashes($actu->lieu)) ?></p>
-					<p><?php echo trim(stripslashes($actu->tarif)) ?></p>
+					<p><i class="fa fa-calendar fa-1x" aria-hidden="true">&nbsp;</i><?php echo $actu->jour_heure ?></p>
+					<p><i class="fa fa-map-marker fa-1x" aria-hidden="true">&nbsp;</i><?php echo MjcParagraphe::epure($actu->lieu) ?></p>
+                    <?php if ($actu->descriptif) { ?>
+					<p class="descriptif"><i class="fa fa-quote-left fa-2x" aria-hidden="true">&nbsp;</i><?php echo MjcParagraphe::epure($actu->descriptif) ?></p>
+                    <?php } ?>
+					<?php if (!empty($actu->tarif)) { ?>
+					<p>Prix : <?php echo MjcParagraphe::epure($actu->tarif) ?></p>
+					<?php } ?>
 				</div>
 			</div>
 		</div>
@@ -31,10 +37,9 @@ if (isset($_GET['actu'])) {
 	<?php
 }
 
-// On n'a rien cherche
+// On n'a rien cherché
 else {
 
-$actus = $wpdb->get_results( "SELECT * FROM mjc_actus WHERE date(now()) >= date_debut_publication AND date(now()) <= date_fin_publication ORDER BY date_actu DESC" );
 
 ?>
 	<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
@@ -42,31 +47,57 @@ $actus = $wpdb->get_results( "SELECT * FROM mjc_actus WHERE date(now()) >= date_
 			<h1 class="entry-title">Toutes nos actus</h1>
 		</header>
 		<div class="entry-content">
-		<div class="listes liste_actus">
 			<?php
-			$i = "droite";
-			foreach ($actus as $actu) {
-				$i = ($i == "gauche") ? "doite" : "gauche";
-				$lien = get_permalink($post->ID);
+			$actusFutur = $wpdb->get_results( "SELECT * FROM mjc_actus WHERE date(now()) >= date_debut_publication AND date(now()) <= date_fin_publication ORDER BY date_actu" );
 
-				echo "<a href='$lien&actu=$actu->id'>
-					<div class='$i'>
-						<div class='cover'><div style='background-image: url(wp-content/uploads/actus/$actu->photo)'></div></div>
-						<div class='contenu'>
-							<h2>" . trim(stripslashes($actu->nom)) . "</h2>
-							<p>" . $actu->jour_heure . "</p>
-							<p>" . trim(stripslashes($actu->lieu)) . "</p>
+			if ($actusFutur) {
+				?>
+				<h4>Ça va se passer !</h4>
+				<div class="listes liste_actus">
+					<?php
+					foreach ($actusFutur as $actu) {
+						$lien = get_permalink($post->ID);
+						?>
+						<a href='<?php echo $lien; ?>&actu=<?php echo $actu->id; ?>'>
+							<div>
+								<div class='cover'>
+									<div style='background-image: url(wp-content/uploads/actus/<?php echo $actu->photo ?>)'></div>
+								</div>
+								<div class='contenu'>
+									<h2><?php echo MjcParagraphe::epure($actu->nom) ?></h2>
+									<p><i class="fa fa-calendar fa-1x" aria-hidden="true">&nbsp;</i><?php echo $actu->jour_heure ?></p>
+									<p><i class="fa fa-map-marker fa-1x" aria-hidden="true">&nbsp;</i><?php echo MjcParagraphe::epure($actu->lieu) ?></p>
+								</div>
+							</div>
+						</a>
+					<?php } ?>
+				</div>
+				<h4>&nbsp;</h4>
+			<hr>
+			<?php } ?>
+			<h4>Ça s'est passé...</h4>
+			<div class="listes liste_actus">
+				<?php
+				$actus_passees = $wpdb->get_results( "SELECT * FROM mjc_actus WHERE date(now()) > date_actu AND date(now()) > date_fin_publication ORDER BY date_actu DESC" );
+				foreach ($actus_passees as $actu) {
+					$lien = get_permalink($post->ID);
+					?>
+					<a href='<?php echo $lien; ?>&actu=<?php echo $actu->id; ?>'>
+						<div>
+							<div class='cover'>
+								<div style='background-image: url(wp-content/uploads/actus/<?php echo $actu->photo ?>)'></div>
+							</div>
+							<div class='contenu'>
+								<h2><?php echo MjcParagraphe::epure($actu->nom) ?></h2>
+								<p><i class="fa fa-calendar fa-1x" aria-hidden="true">&nbsp;</i><?php echo $actu->jour_heure ?></p>
+								<p><i class="fa fa-map-marker fa-1x" aria-hidden="true">&nbsp;</i><?php echo MjcParagraphe::epure($actu->lieu) ?></p>
+							</div>
 						</div>
-					</div>
-				</a>";
-			}
-			?>
-			
+					</a>
+				<?php } ?>
+			</div>
 		</div>
-	</div>
-
-
-	</article><!-- #post -->
+	</article>
 
 <?php
 }

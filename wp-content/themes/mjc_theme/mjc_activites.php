@@ -18,28 +18,24 @@ get_header(); ?>
 		$i = "droite";
 		foreach ($activites as $activite) {
 			$i = ($i == "gauche") ? "doite" : "gauche";
-			$lien = get_permalink(20);
+			$lien      = get_permalink(20);
 			$carac_url = (strstr($lien, "?")) ? "&" : "?";
 			$url_photo = ($activite->photo == "") ? "activite_neutre_trans$tranche.jpg" : $activite->photo;
-			// $carac_url = "&";
-					
-			echo "<a href='" . $lien . $carac_url . "acti=$activite->id'>
-				<div class='$i'>
-					<div class='cover'><div style='background-image: url(wp-content/uploads/activites/$url_photo)'></div></div>
-					<div class='contenu'>
-						<h2>" . stripslashes($activite->nom) . "</h2>
-						<p>$activite->jour_heure</p>
-						<p>$activite->tarif</p>
-						<p>$activite->domaine_nom</p>
+			?>
+			<a href="<?php echo $lien . $carac_url; ?>" acti="<?php echo $activite->id; ?>">
+				<div class="<?php echo $i ?>">
+					<div class="cover"><div style="background-image: url(wp-content/uploads/activites/<?php echo $url_photo ?>)"></div></div>
+					<div class="contenu">
+						<h2><?php echo stripslashes($activite->nom) ?></h2>
+						<p><i class="fa fa-calendar fa-1x" aria-hidden="true">&nbsp;</i><?php echo $activite->jour_heure ?></p>
+						<p><?php echo $activite->tarif ?></p>
+						<p><?php echo $activite->domaine_nom ?></p>
 					</div>
 				</div>
-			</a>";
-		}
-		?>
-			
+			</a>
+		<?php } ?>
 		</div>
 	</div>
-
 
 </article><!-- #post -->
 

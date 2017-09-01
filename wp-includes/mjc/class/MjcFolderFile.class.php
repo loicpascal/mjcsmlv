@@ -2,7 +2,7 @@
 
 class MjcFolderFile {
 	
-    function createActiviteFolder(){
+    public static function createActiviteFolder(){
         if(!file_exists(ABSPATH . 'wp-content/uploads/activites/' . date("Y"))) {
             mkdir(ABSPATH . 'wp-content/uploads/activites/' . date("Y"), 0777);
         }
@@ -14,7 +14,7 @@ class MjcFolderFile {
         return ABSPATH . 'wp-content/uploads/activites/' . date("Y") . "/" . date("m");
     }
 
-	function createActuFolder(){
+	public function createActuFolder(){
 		if(!file_exists(ABSPATH . 'wp-content/uploads/actus/' . date("Y"))) {
             mkdir(ABSPATH . 'wp-content/uploads/actus/' . date("Y"), 0777);
         }
@@ -26,7 +26,7 @@ class MjcFolderFile {
         return ABSPATH . 'wp-content/uploads/actus/' . date("Y") . "/" . date("m");
 	}
 
-    function getActuFolderPath(){
+    public function getActuFolderPath(){
         return ABSPATH . 'wp-content/uploads/actus/';
     }
 }

@@ -15,7 +15,7 @@ Use it to make something cool, have fun, and share what you've learned with othe
 */
 
 @import url("style_parent.css");
-/*@import url("css/fontawesome/font-awesome.min.css");*/
+@import url("css/font-awesome/css/font-awesome.min.css");
 
 /**
  * Table of Contents:
@@ -154,8 +154,8 @@ input[type="submit"]:focus,
 input[type="button"]:focus,
 input[type="reset"]:focus {
 	border: #db3754 4px solid;
-	background: #db3754;
-	color: #c62841;
+	background: white;
+	color: #db3754;
 }
 
 /*button:active,
@@ -253,13 +253,13 @@ input[type="reset"]:active {
 	padding: 8px 15px;
 	min-width: 200px;
 	border: #db3754 4px solid;
-	box-sizing:border-box;
+	box-sizing: border-box;
 	border-radius: 2px 0 0 2px;
 }
 
 .site-header #recherche_activite p:first-child input[type="submit"] {
 	width: 20%;
-	box-sizing:border-box;
+	box-sizing: border-box;
 	border-radius: 0 2px 2px 0;
 }
 
@@ -307,7 +307,7 @@ ul.nav-menu ul a:focus,
 	font-weight: bold;
 }
 
-/* Mediaelements 
+/* Mediaelements
 .hentry .mejs-mediaelement,
 .hentry .mejs-container .mejs-controls {
 	background: #db3754;
@@ -393,7 +393,7 @@ ul.nav-menu ul a:focus,
 	background-position: center center;
 	background-repeat: no-repeat;
 	background-size: cover;
-	border-radius: 10px 10px 2px 2px;
+	border-radius: 2px;
 	overflow: hidden;
 	cursor: context-menu;
 }
@@ -405,7 +405,7 @@ ul.nav-menu ul a:focus,
 	background : #8fc855;
 	color: white;
 	text-align: center;
-	font-size: 22px;
+	font-size: 20px;
 	font-weight: bold;
 	-webkit-transition: 0.5s;
 	-o-transition: 0.5s;
@@ -436,7 +436,6 @@ ul.nav-menu ul a:focus,
 	font-size: 20px;
 	padding: 0;
 	color: white;
-	border-radius: 2px;
 }
 
 .page_mjc_accueil .bloc_accueil > div > a:hover {
@@ -504,10 +503,6 @@ ul.nav-menu ul a:focus,
 	margin-top: 20px;
 }
 
-.entry-content > .listes {
-	
-}
-
 .entry-content > .listes > a > div {
 	display: inline-block;
 	width: 48%;
@@ -564,6 +559,7 @@ ul.nav-menu ul a:focus,
 .entry-content > .listes > a > div > div.contenu h2 {
 	font-size: 20px;
 	margin: 0;
+    margin-bottom: 10px;
 }
 
 .entry-content > .listes > a > div > div.contenu > p {
@@ -586,7 +582,11 @@ ul.nav-menu ul a:focus,
 }
 
 .entry-content > .presentation > .contenu > p {
-	margin: 0;
+	margin: 0 0 5px 0;
+}
+
+.entry-content > .presentation > .contenu > .descriptif {
+	font-style: italic;
 }
 
 /**
@@ -652,12 +652,12 @@ ul.nav-menu ul a:focus,
 .widget .widget-title {
 	font: 800 italic 20px "Source Sans Pro", Helvetica, sans-serif;
     color: #db3754;
-    border: 5px solid #db3754;
-    border-radius: 2px;
+    border: 1px solid #db3754;
     background: white;
     margin-right: 20px;
-    margin-top: -27px;
+    margin-top: -24px;
     margin-left: 20px;
+    padding-bottom: 3px;
     border-radius: 20px;
 }
 
@@ -713,7 +713,7 @@ ul.nav-menu ul a:focus,
 	width: 30%;
 	height: 30px;
 	margin-top: 4px;
-	padding: 3px 8px;
+	padding: 2px 8px;
 	min-width: 50px;
 }
 
@@ -801,7 +801,7 @@ ul.nav-menu ul a:focus,
 
 /* Formulaire page CONTACT */
 #wpcf7-f82-p226-o1 form {
-	
+
 }
 
 #wpcf7-f82-p226-o1 form input[type="text"],
@@ -810,4 +810,8 @@ ul.nav-menu ul a:focus,
 #wpcf7-f82-p226-o1 form textarea {
 	padding: 2px 6px;
 	border-radius: 2px;
+}
+
+#captcha-google {
+	margin-bottom: 12px;
 }

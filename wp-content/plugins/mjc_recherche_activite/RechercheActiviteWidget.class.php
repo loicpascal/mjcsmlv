@@ -5,7 +5,7 @@ class RechercheActiviteWidget extends WP_Widget
 	/**
 	 * Initialise le nom du widget, sa description, etc...
 	 */
-	
+
 	private $domaines;
 
 	public function __construct() {
@@ -21,7 +21,7 @@ class RechercheActiviteWidget extends WP_Widget
 	/**
 	 * Affiche le contenu du widget
 	 */
-	public function widget($args, $instance) 
+	public function widget($args, $instance)
 	{
 		echo $args['before_widget'];
 		echo $args['before_title'];
@@ -41,9 +41,9 @@ class RechercheActiviteWidget extends WP_Widget
 		    	<label for="mjc_recherche_activite_age">Age</label>
 		        <select id="mjc_recherche_activite_age" name="mjc_recherche_activite_age">
 					<?php
-					for ($i=0; $i <= 99; $i++) { 
+					for ($i=0; $i <= 99; $i++) {
 						# code...
-						echo "<option value=\"$i\">$i</option>";
+						echo '<option value="' . $i . '" ' . ((isset($_POST['mjc_recherche_activite_age']) && $_POST['mjc_recherche_activite_age'] == $i ) ? 'selected="selected"' : '') . '>' . $i . '</option>';
 					}
 					?>
 		        </select>
@@ -52,7 +52,7 @@ class RechercheActiviteWidget extends WP_Widget
 					<?php
 		            foreach ( $this->domaines as $domaine )
 		            {
-		                echo '<option value="' . $domaine->domaine_id . '" >' . $domaine->domaine_nom . '</option>';
+		                echo '<option value="' . $domaine->domaine_id . '" ' . ((isset($_POST['mjc_recherche_activite_domaine']) && $_POST['mjc_recherche_activite_domaine'] == $domaine->domaine_id ) ? 'selected="selected"' : '') . '>' . $domaine->domaine_nom . '</option>';
 		            }
 		            ?>
 		        </select>
