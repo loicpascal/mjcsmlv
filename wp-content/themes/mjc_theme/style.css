@@ -214,9 +214,8 @@ input[type="reset"]:active {
 }
 
 .site-header img.logo {
-	width: 44px;
-	margin-left: 20px;
-	margin-top: -4px;
+	margin-top: -43px;
+	float: right;
 }
 
 .site-header img#titre_site {
