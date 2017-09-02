@@ -22,7 +22,7 @@ get_header(); ?>
 			$carac_url = (strstr($lien, "?")) ? "&" : "?";
 			$url_photo = ($activite->photo == "") ? "activite_neutre_trans$tranche.jpg" : $activite->photo;
 			?>
-			<a href="<?php echo $lien . $carac_url; ?>" acti="<?php echo $activite->id; ?>">
+			<a href="<?php echo $lien . $carac_url; ?>acti=<?php echo $activite->id; ?>">
 				<div class="<?php echo $i ?>">
 					<div class="cover"><div style="background-image: url(wp-content/uploads/activites/<?php echo $url_photo ?>)"></div></div>
 					<div class="contenu">
