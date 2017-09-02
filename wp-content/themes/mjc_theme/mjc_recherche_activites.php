@@ -34,7 +34,7 @@ if (isset($_GET['acti'])) {
 						<li>T3 : <?php echo $activite->t3 ?> €</li>
 						<li>T4 : <?php echo $activite->t4 ?> €</li>
 					</ul>
-					<p><a href="<?php echo get_permalink(226); ?>"" title="MJC - Contact">Inscription uniquement à la MJC</a></p>
+					<p><a href="<?php echo get_permalink(226); ?>"" title="MJC - Contact">Inscription à la MJC</a></p>
 				</div>
 			</div>
 		</div>
