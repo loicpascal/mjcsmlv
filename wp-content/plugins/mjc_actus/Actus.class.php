@@ -139,7 +139,7 @@ class Actus
             <?php submit_button('Voir l\'actu'); ?>
         </form>
 
-        <?php 
+        <?php
         if ( isset($_POST['mjc_actus_modifier_actus']) && !empty($_POST['mjc_actus_modifier_actus']) ) {
         ?>
         <form method="post" action="" enctype="multipart/form-data">
@@ -235,7 +235,7 @@ class Actus
                     <tr id="voy_">
                         <td><a href="?page=mjc_actus_modifier&id_actus=<?php echo $actus->id ?>" <?php echo $color; ?>><?php echo MjcParagraphe::epure($actus->nom); ?></a></td>
                         <td ><?php echo MjcParagraphe::epure($actus->tarif); ?></td>
-                        <td ><?php echo date('d/m/Y', strtotime($actus->date_actu)); ?></td>
+                        <td ><?php echo date('d/m/Y', $actus->date_actu); ?></td>
                         <td ><?php echo MjcParagraphe::epure($actus->jour_heure); ?></td>
                     </tr>
                 <?php
@@ -289,7 +289,7 @@ class Actus
     }
 
     public function section_modifier_html() {
-        echo 'Modifiez les informations sur l\'actu.';  
+        echo 'Modifiez les informations sur l\'actu.';
     }
 
     /********************************************************************************************
@@ -341,7 +341,7 @@ class Actus
     public function date_actu_html() {
         $default_value = $this->getDefaultValueFromById('date_actu', 'mjc_actus');
         ?>
-        <input type="date" name="mjc_actus_date_actu" value="<?php echo $default_value ?>"/>
+        <input type="date" name="mjc_actus_date_actu" value="<?php echo date("Y-m-d", $default_value) ?>"/>
         <?php
     }
 
@@ -464,9 +464,11 @@ class Actus
                 require_once( ABSPATH . 'wp-admin/includes/file.php' );
             }
 
+            $aDateActu = explode('-' . $_POST['mjc_actus_date_actu']);
+
             $nom                    = ucfirst($_POST['mjc_actus_nom']);
             $tarif                  = $_POST['mjc_actus_tarif'];
-            $date_actu              = $_POST['mjc_actus_date_actu'];
+            $date_actu              = mktime(0, 0, 0, $aDateActu[1], $aDateActu[2], $aDateActu[0]);
             $jour_heure             = ucfirst($_POST['mjc_actus_jour_heure']);
             $lieu                   = ucfirst($_POST['mjc_actus_lieu']);
             $descriptif             = ucfirst($_POST['mjc_actus_descriptif']);
@@ -537,10 +539,12 @@ class Actus
                 require_once( ABSPATH . 'wp-admin/includes/file.php' );
             }
 
+            $aDateActu = explode('-', $_POST['mjc_actus_date_actu']);
+
             $id                     = $_POST['mjc_actus_id'];
             $nom                    = ucfirst($_POST['mjc_actus_nom']);
             $tarif                  = $_POST['mjc_actus_tarif'];
-            $date_actu              = $_POST['mjc_actus_date_actu'];
+            $date_actu              = mktime(0, 0, 0, $aDateActu[1], $aDateActu[2], $aDateActu[0]);
             $jour_heure             = ucfirst($_POST['mjc_actus_jour_heure']);
             $lieu                   = ucfirst($_POST['mjc_actus_lieu']);
             $descriptif             = ucfirst($_POST['mjc_actus_descriptif']);
@@ -594,7 +598,7 @@ class Actus
                     ),
                     array( 'id' => $id)
                 );
-            // }            
+            // }
         }
     }
 
@@ -643,11 +647,11 @@ class Actus
 
     public function getAllactussOrderByDesc($order) {
         global $wpdb;
-        return $wpdb->get_results( "SELECT *, 
+        return $wpdb->get_results( "SELECT *,
             CASE
                 WHEN (CURDATE() BETWEEN `date_debut_publication` AND `date_fin_publication`) THEN 1
                 ELSE 0
-            END as publie 
+            END as publie
             FROM mjc_actus ORDER BY $order DESC" );
     }
 

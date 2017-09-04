@@ -78,7 +78,7 @@ else {
 			<h4>Ça s'est passé...</h4>
 			<div class="listes liste_actus">
 				<?php
-				$actus_passees = $wpdb->get_results( "SELECT * FROM mjc_actus WHERE date(now()) > date_actu AND date(now()) > date_fin_publication ORDER BY date_actu DESC" );
+				$actus_passees = $wpdb->get_results( "SELECT * FROM mjc_actus WHERE " . time() . " > date_actu AND " . time() . " > date_fin_publication ORDER BY date_actu DESC" );
 				foreach ($actus_passees as $actu) {
 					$lien = get_permalink($post->ID);
 					?>

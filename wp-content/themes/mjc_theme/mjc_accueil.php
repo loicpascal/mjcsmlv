@@ -5,7 +5,7 @@
 get_header(); ?>
 
 <?php
-$actu = $wpdb->get_row( "SELECT * FROM mjc_actus ORDER BY date_actu DESC LIMIT 1" );
+$actu = $wpdb->get_row( "SELECT * FROM mjc_actus WHERE date_actu > " . time() . " ORDER BY date_actu ASC LIMIT 1" );
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>

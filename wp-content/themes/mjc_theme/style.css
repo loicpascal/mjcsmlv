@@ -498,9 +498,12 @@ ul.nav-menu ul a:focus,
 	margin-right: auto;
 }
 
-.page_mjc_accueil > a > div button {
-	width: 100%;
-	margin-top: 20px;
+.page_mjc_accueil > a > button {
+	width: 36%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    min-width: 330px;
 }
 
 .entry-content > .listes > a > div {
@@ -625,7 +628,7 @@ ul.nav-menu ul a:focus,
  */
 
 .site-footer .sidebar-container {
-	background-color: #db3754;
+	background-color: #f7f5e7;
 	padding: 0;
 }
 
@@ -750,7 +753,7 @@ ul.nav-menu ul a:focus,
     color: #db3754;
     border: 5px solid #db3754;
     border-radius: 2px;
-    background: white;
+    background: #f7f5e7;
     margin-right: 20px;
     margin-top: 0;
     margin-left: 20px;
