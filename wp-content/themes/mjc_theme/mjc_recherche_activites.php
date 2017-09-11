@@ -12,7 +12,7 @@ if (isset($_GET['acti'])) {
 	?>
 	<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 		<header class="entry-header">
-			<h1 class="entry-title">Activité : <?php echo stripslashes($activite->nom) ?></h1>
+			<h1 class="entry-title">Activité - <?php echo stripslashes($activite->nom) ?></h1>
 		</header>
 		<div class="entry-content">
 			<div class="presentation">
@@ -26,7 +26,7 @@ if (isset($_GET['acti'])) {
 					<p><?php echo $activite->age ?></p>
 					<p>Places : <?php echo $activite->nb_places ?></p>
 					<p>Domaine : <?php echo $activite->domaine_nom ?></p>
-					<p><i class="fa fa-user fa-1x" aria-hidden="true">&nbsp;</i>Intervenant : <?php echo $activite->intervenant_prenom ?>&nbsp;<?php echo $activite->intervenant_nom ?></p>
+					<p><i class="fa fa-user fa-1x" aria-hidden="true">&nbsp;</i>Intervenant : <?php echo stripslashes($activite->intervenant_prenom . " " . $activite->intervenant_nom) ?></p>
 					<p>Tarif : <?php echo $activite->tarif ?> (selon QF)</p>
 					<ul>
 						<li>T1 : <?php echo $activite->t1 ?> €</li>

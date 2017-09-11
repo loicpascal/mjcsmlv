@@ -214,9 +214,8 @@ input[type="reset"]:active {
 }
 
 .site-header img.logo {
-	width: 44px;
-	margin-left: 20px;
-	margin-top: -4px;
+	margin-top: -43px;
+	float: right;
 }
 
 .site-header img#titre_site {
@@ -462,14 +461,12 @@ ul.nav-menu ul a:focus,
 }
 
 .page_mjc_accueil > div.actus > a > div {
-	width: 80px;
 	text-align: center;
 	font-weight: bold;
 	background: #db3754;
 }
 
 .page_mjc_accueil > div.actus > div {
-	width: 87%;
 	color: #333;
 }
 
@@ -498,12 +495,13 @@ ul.nav-menu ul a:focus,
 	margin-right: auto;
 }
 
-.page_mjc_accueil > a > button {
+.page_mjc_accueil > button {
 	width: 36%;
     margin-left: auto;
     margin-right: auto;
     display: block;
     min-width: 330px;
+    margin-top: 30px;
 }
 
 .entry-content > .listes > a > div {
