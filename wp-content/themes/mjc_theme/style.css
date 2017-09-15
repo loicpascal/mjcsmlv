@@ -739,11 +739,12 @@ ul.nav-menu ul a:focus,
 	left: -8px;
 }
 
-.widget#mjc_partenaires-2 {
+.widget_mjc_partenaires {
 	text-align: center;
 	border-radius: 2px;
 	padding: 10px;
 	margin-bottom: 20px;
+    width: 425px!important;
 }
 
 .widget#mjc_partenaires-2 .widget-title {
